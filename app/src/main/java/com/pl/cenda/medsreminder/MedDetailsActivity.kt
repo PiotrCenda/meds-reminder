@@ -16,6 +16,7 @@ class MedDetailsActivity : AppCompatActivity() {
     lateinit var medInfo: MedInfoList
     lateinit var medInfoRecyclerView: RecyclerView
     lateinit var addMedInfoButton: FloatingActionButton
+    lateinit var delMedButton: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +31,12 @@ class MedDetailsActivity : AppCompatActivity() {
 
         addMedInfoButton = findViewById(R.id.add_med_info_button)
         addMedInfoButton.setOnClickListener {
-            showCreateTaskDialog()
+            showCreateMedDetailDialog()
+        }
+
+        delMedButton = findViewById(R.id.del_med_button)
+        delMedButton.setOnClickListener {
+            showDeleteMedDialog()
         }
     }
 
@@ -45,9 +51,20 @@ class MedDetailsActivity : AppCompatActivity() {
         super.onBackPressed()
     }
 
-    private fun showCreateTaskDialog() {
-        val dialogTitle = getString(R.string.task_to_add_title)
-        val positiveButtonTitle = getString(R.string.add_task)
+    fun onDeletePressed() {
+        val bundle = Bundle()
+        bundle.putParcelable(MainActivity.INTENT_MED_KEY, medInfo)
+
+        val intent = Intent()
+        intent.putExtras(bundle)
+        setResult(MainActivity.MED_DELETE_REQUEST_CODE, intent)
+
+        super.onBackPressed()
+    }
+
+    private fun showCreateMedDetailDialog() {
+        val dialogTitle = getString(R.string.med_info_to_add_title)
+        val positiveButtonTitle = getString(R.string.add_med_info)
 
         val builder = AlertDialog.Builder(this)
         val medInfoEditText = EditText(this)
@@ -62,6 +79,26 @@ class MedDetailsActivity : AppCompatActivity() {
             medInfo.medDetails.add(info)
             val recyclerAdapter = medInfoRecyclerView.adapter as MedInfoRecyclerViewAdapter
             recyclerAdapter.notifyItemInserted(medInfo.medDetails.size - 1)
+            dialog.dismiss()
+        }
+        builder.create().show()
+    }
+
+    private fun showDeleteMedDialog() {
+        val dialogTitle = getString(R.string.delete_med_title)
+        val positiveButtonTitle = getString(R.string.delete_med)
+        val negativeButtonTitle = getString(R.string.not_delete_med)
+
+        val builder = AlertDialog.Builder(this)
+
+        builder.setTitle(dialogTitle)
+
+        builder.setPositiveButton(positiveButtonTitle) { dialog, _ ->
+            dialog.dismiss()
+            onDeletePressed()
+        }
+
+        builder.setNegativeButton(negativeButtonTitle) { dialog, _ ->
             dialog.dismiss()
         }
         builder.create().show()

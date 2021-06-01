@@ -13,6 +13,10 @@
     <string name="list_name_question">What is the name of your list?</string>
     <string name="create_list">Saving</string>
 
-    <string name="task_to_add_title">What is the task you want to add</string>
-    <string name="add_task">Add</string>
+    <string name="med_info_to_add_title">What is the med info you want to add?</string>
+    <string name="add_med_info">Add</string>
+
+    <string name="delete_med_title">Are you sure, you want to delete it?</string>
+    <string name="delete_med">Delete</string>
+    <string name="not_delete_med">Return</string>
 </resources>

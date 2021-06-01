@@ -5,9 +5,15 @@ import androidx.preference.PreferenceManager
 
 class MedsDataManager(private val context: Context) {
 
-    fun saveList(med: MedInfoList) {
+    fun saveMed(med: MedInfoList) {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context).edit()
         sharedPreferences.putStringSet(med.name, med.medDetails.toHashSet())
+        sharedPreferences.apply()
+    }
+
+    fun delMed(med: MedInfoList) {
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context).edit()
+        sharedPreferences.remove(med.name)
         sharedPreferences.apply()
     }
 

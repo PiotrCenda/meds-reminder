@@ -14,7 +14,7 @@ class ListSelectionRecyclerViewAdapter(private val meds: ArrayList<MedInfoList>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MedSelectionViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.med_selection_view_holder,
+            .inflate(R.layout.med_view_holder,
                 parent,
                 false)
 
@@ -34,8 +34,13 @@ class ListSelectionRecyclerViewAdapter(private val meds: ArrayList<MedInfoList>,
         return meds.count()
     }
 
-    fun addList(med: MedInfoList) {
+    fun addMed(med: MedInfoList) {
         meds.add(med)
+        notifyItemInserted(meds.size - 1)
+    }
+
+    fun delMed(med: MedInfoList) {
+        meds.remove(med)
         notifyItemInserted(meds.size - 1)
     }
 }

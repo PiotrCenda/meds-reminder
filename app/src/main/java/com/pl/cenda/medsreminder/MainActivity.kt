@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity(),
     companion object {
         const val  INTENT_MED_KEY = "list"
         const val MED_DETAILS_REQUEST_CODE = 420
+        const val MED_DELETE_REQUEST_CODE = 421
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity(),
         val meds = medsDataManager.readList()
 
         findViewById<FloatingActionButton>(R.id.add_med_button).setOnClickListener { result ->
-            showCreateListDialog()
+            showCreateMedDialog()
         }
 
         medsRecyclerView = findViewById<RecyclerView>(R.id.meds_recycler_view)
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun listItemClicked(meds: MedInfoList) {
-        showListDetail(meds)
+        showMedDetails(meds)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -48,20 +49,24 @@ class MainActivity : AppCompatActivity(),
 
         if (requestCode == MED_DETAILS_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             data?.let {
-                medsDataManager.saveList(data.getParcelableExtra(INTENT_MED_KEY))
+                medsDataManager.saveMed(data.getParcelableExtra(INTENT_MED_KEY))
+                updateMedsData()
+            }
+        } else if (resultCode == MED_DELETE_REQUEST_CODE) {
+            data?.let {
+                medsDataManager.delMed(data.getParcelableExtra(INTENT_MED_KEY))
                 updateMedsData()
             }
         }
     }
 
-
-    private fun showListDetail(medInfo: MedInfoList) {
+    private fun showMedDetails(medInfo: MedInfoList) {
         val listDetailIntent = Intent(this, MedDetailsActivity::class.java)
         listDetailIntent.putExtra(INTENT_MED_KEY, medInfo)
         startActivityForResult(listDetailIntent, MED_DETAILS_REQUEST_CODE)
     }
 
-    private fun showCreateListDialog() {
+    private fun showCreateMedDialog() {
         val dialogTitle = getString(R.string.list_name_question)
         val positiveButtonTitle = getString(R.string.create_list)
 
@@ -74,11 +79,11 @@ class MainActivity : AppCompatActivity(),
         builder.setView(medTitleEditText)
 
         builder.setPositiveButton(positiveButtonTitle) { dialog, _ ->
-            val list = MedInfoList(medTitleEditText.text.toString())
-            medsDataManager.saveList(list)
+            val med = MedInfoList(medTitleEditText.text.toString())
+            medsDataManager.saveMed(med)
             val recyclerViewAdapter = medsRecyclerView.adapter as ListSelectionRecyclerViewAdapter
-            recyclerViewAdapter.addList(list)
-            showListDetail(list)
+            recyclerViewAdapter.addMed(med)
+            showMedDetails(med)
         }
 
         builder.create().show()
