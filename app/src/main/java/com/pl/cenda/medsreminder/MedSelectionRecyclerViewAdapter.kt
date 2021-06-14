@@ -1,9 +1,7 @@
 package com.pl.cenda.medsreminder
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.res.ComplexColorCompat
 import androidx.recyclerview.widget.RecyclerView
 
 interface ListSelectionRecyclerViewClickListener {
@@ -23,14 +21,16 @@ class ListSelectionRecyclerViewAdapter(private val meds: ArrayList<MedInfoList>,
         return MedSelectionViewHolder(view)
     }
 
-
     override fun onBindViewHolder(holder: MedSelectionViewHolder, position: Int) {
         holder.medPosition.text = (position + 1).toString()
         holder.medName.text = meds.get(position).name
-        var color = R.color.item2
+
         if(position%2 == 0){
-            //holder.medPosition.setBackgroundColor(color)
+            holder.medName.setBackgroundResource(R.drawable.text_bg)
+        } else {
+            holder.medName.setBackgroundResource(R.drawable.text_bg2)
         }
+
         holder.itemView.setOnClickListener {
             clickListener.listItemClicked(meds[position])
         }
@@ -42,11 +42,6 @@ class ListSelectionRecyclerViewAdapter(private val meds: ArrayList<MedInfoList>,
 
     fun addMed(med: MedInfoList) {
         meds.add(med)
-        notifyItemInserted(meds.size - 1)
-    }
-
-    fun delMed(med: MedInfoList) {
-        meds.remove(med)
         notifyItemInserted(meds.size - 1)
     }
 }
