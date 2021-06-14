@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:background="@color/bg"
+    android:textSize="20dp"
+    android:textColor="@color/font">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/meds_recycler_view"
@@ -21,8 +24,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/item1"
         android:clickable="true"
+        android:tint="@color/bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:rippleColor="@color/bg"
         app:srcCompat="@android:drawable/ic_input_add" />
 </androidx.constraintlayout.widget.ConstraintLayout>
