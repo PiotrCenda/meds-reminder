@@ -1,11 +1,15 @@
 package com.pl.cenda.medsreminder
 
 import android.app.Activity
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Intent
+import android.icu.util.Calendar
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
 import android.widget.EditText
+import android.widget.TimePicker
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -31,13 +35,28 @@ class MedDetailsActivity : AppCompatActivity() {
 
         addMedInfoButton = findViewById(R.id.add_med_info_button)
         addMedInfoButton.setOnClickListener {
-            showCreateMedDetailDialog()
+//            showCreateMedDetailDialog()
+            pickDateTime()
         }
 
         delMedButton = findViewById(R.id.del_med_button)
         delMedButton.setOnClickListener {
             showDeleteMedDialog()
         }
+    }
+
+    private fun pickDateTime() {
+        val mcurrentTime = Calendar.getInstance()
+        val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
+        val minute = mcurrentTime.get(Calendar.MINUTE)
+
+        TimePickerDialog(this, object : TimePickerDialog.OnTimeSetListener {
+            override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+                medInfo.medDetails.add(String.format("%d : %d", hourOfDay, minute))
+                val recyclerAdapter = medInfoRecyclerView.adapter as MedInfoRecyclerViewAdapter
+                recyclerAdapter.notifyItemInserted(medInfo.medDetails.size - 1)
+            }
+        }, hour, minute, true).show()
     }
 
     override fun onBackPressed() {

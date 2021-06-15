@@ -36,15 +36,15 @@
         android:id="@+id/del_med_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="456dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="@color/item1"
         android:backgroundTintMode="add"
         android:clickable="true"
         android:tint="@color/bg"
         app:backgroundTint="@color/item1"
+        app:layout_constraintBottom_toTopOf="@+id/add_med_info_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:rippleColor="@color/bg"
         app:srcCompat="@android:drawable/ic_menu_delete" />
 

@@ -13,6 +13,12 @@ class MedInfoRecyclerViewAdapter(var med: MedInfoList): RecyclerView.Adapter<Med
 
     override fun onBindViewHolder(holderInfo: MedInfoViewHolder, position: Int) {
         holderInfo.medTextView.text = med.medDetails[position]
+
+        if(position%2 == 0){
+            holderInfo.medTextView.setBackgroundResource(R.drawable.text_bg)
+        } else {
+            holderInfo.medTextView.setBackgroundResource(R.drawable.text_bg2)
+        }
     }
 
     override fun getItemCount(): Int {
