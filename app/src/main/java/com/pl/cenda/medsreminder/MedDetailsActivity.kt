@@ -1,19 +1,19 @@
 package com.pl.cenda.medsreminder
 
-import android.app.Activity
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
+import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.icu.util.Calendar
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
 import android.widget.EditText
 import android.widget.TimePicker
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+
 
 class MedDetailsActivity : AppCompatActivity() {
 
@@ -45,18 +45,57 @@ class MedDetailsActivity : AppCompatActivity() {
         }
     }
 
+    fun remind(hourOfDay: Int, minute: Int) {
+        val alarmManager =
+            getSystemService(Context.ALARM_SERVICE) as AlarmManager //we are using alarm manager for the notification
+
+        val notificationIntent = Intent(
+            this,
+            MainActivity::class.java
+        ) //this intent will be called when taping the notification
+
+        val broadcast = PendingIntent.getBroadcast(
+            this,
+            100,
+            notificationIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        ) //this pendingIntent will be called by the broadcast receiver
+
+        val cal = Calendar.getInstance() //getting calender instance
+
+        cal.timeInMillis = System.currentTimeMillis() //setting the time from device
+
+        cal.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.SECOND, 0);
+
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            cal.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            broadcast
+        ) //alarm manager will repeat the notification each day at the set time
+    }
+
     private fun pickDateTime() {
         val mcurrentTime = Calendar.getInstance()
-        val hour = mcurrentTime.get(Calendar.HOUR_OF_DAY)
-        val minute = mcurrentTime.get(Calendar.MINUTE)
+        val hourCal = mcurrentTime.get(Calendar.HOUR_OF_DAY)
+        val minuteCal = mcurrentTime.get(Calendar.MINUTE)
 
         TimePickerDialog(this, object : TimePickerDialog.OnTimeSetListener {
             override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-                medInfo.medDetails.add(String.format("%d : %d", hourOfDay, minute))
+                if (minute < 10) {
+                    medInfo.medDetails.add(String.format("%d : 0%d", hourOfDay, minute))
+                } else {
+                    medInfo.medDetails.add(String.format("%d : %d", hourOfDay, minute))
+                }
+
                 val recyclerAdapter = medInfoRecyclerView.adapter as MedInfoRecyclerViewAdapter
                 recyclerAdapter.notifyItemInserted(medInfo.medDetails.size - 1)
+
+                remind(hourOfDay, minute)
             }
-        }, hour, minute, true).show()
+        }, hourCal, minuteCal, true).show()
     }
 
     override fun onBackPressed() {
